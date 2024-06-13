@@ -25,6 +25,12 @@ And then start it:
 PORT=8080 ./react-app
 ```
 
+If you wish to build multiple binaries for different platforms, you can do that with `GOARCH` and `GOOS` env variables. For example, to build for ARM-based Androids:
+
+```bash
+GOARCH=arm64 GOOS=linux go build -o react-app-linux-arm64 main.go
+```
+
 ## Build Docker image
 
 To build the Docker image:
