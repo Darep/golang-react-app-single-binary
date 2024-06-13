@@ -1,0 +1,21 @@
+# docker-compose file for easy local development
+
+services:
+  app:
+    build: .
+    command: go run .
+    environment:
+      - HOST=
+      - PORT=8080
+      - ENV=dev
+      - VITE_URL=http://vite:5137
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+  vite:
+    image: node:20
+    command: bash -c "cd frontend && npm i && npm run dev -- --host vite --port 5137"
+    working_dir: /app
+    volumes:
+      - .:/app
