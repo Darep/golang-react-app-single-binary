@@ -1,6 +1,6 @@
 # Single binary React app using Golang
 
-React app served in a single binary using Golang.
+This is an example/demo of a vite/React app served in a single binary using Golang. You can change the vite app in [frontend/](./frontend) to Next.js or anything that builds into static files quite easily.
 
 ## Getting Started
 
