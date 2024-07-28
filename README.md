@@ -1,8 +1,8 @@
 # Single binary React app using Golang
 
-This is an example/demo of a vite/React app served in a single binary using Golang. You can change the vite app in [frontend/](./frontend) to Next.js or anything that builds into static files quite easily.
+This is an example/demo of a Vite + React app served in a single binary using Golang. The Vite app is in [frontend/](./frontend) directory. You can change it to Next.js or anything **that builds into static files** and use the Golang code provide an API & serve the static files.
 
-## Getting Started
+## Development
 
 Run the local dev env with:
 
@@ -10,9 +10,13 @@ Run the local dev env with:
 docker compose up
 ```
 
+This will start a dev server for the React app and the Golang server. The Golang app will proxy requests to the React app.
+
+Open [http://localhost:8080](http://localhost:8080).
+
 ## Build
 
-To build the binary locally:
+To build to a single binary locally:
 
 ```bash
 cd frontend && npm run build && cd ..
@@ -24,6 +28,8 @@ And then start it:
 ```bash
 PORT=8080 ./react-app
 ```
+
+Open [http://localhost:8080](http://localhost:8080). You should see the Vite example app.
 
 If you wish to build multiple binaries for different platforms, you can do that with `GOARCH` and `GOOS` env variables. For example, to build for ARM-based Androids:
 
