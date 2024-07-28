@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+const fetchMessage = async (callback: (msg: string) => void) => {
+  const helloResponse = await fetch('/api/hello')
+  const helloMessage = await helloResponse.json()
+  callback(helloMessage.msg)
+}
+
 function App() {
+  const [message, setMessage] = useState('')
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    fetchMessage((msg) => setMessage(msg))
+  }, [])
 
   return (
     <>
@@ -17,6 +28,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <h2>{message}</h2>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"encoding/json"
 	"io/fs"
 	"log"
 	"net/http"
@@ -23,6 +24,11 @@ func startApi() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+
+	r.Route("/api", func(r chi.Router) {
+		r.Use(middleware.NoCache)
+		r.Get("/hello", helloHandler)
+	})
 
 	r.Handle("/*", http.HandlerFunc(frontendHandler))
 
@@ -67,4 +73,17 @@ func frontendHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		http.FileServer(http.FS(subFS)).ServeHTTP(w, r)
 	}
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]string{"msg": "Hello, Gopher!"}
+
+	jsonResponse, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonResponse)
 }
