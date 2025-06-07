@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import reactLogo from './assets/react.svg'
 import './App.css'
 
 const fetchMessage = async (callback: (msg: string) => void) => {
@@ -29,6 +29,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <h2>{message}</h2>
+      {window.location.pathname === '/secret' && <h2>Secret message</h2>}
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

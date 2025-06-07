@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"encoding/json"
+	"io"
 	"io/fs"
 	"log"
 	"net/http"
@@ -71,7 +72,30 @@ func frontendHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		http.FileServer(http.FS(subFS)).ServeHTTP(w, r)
+
+		// Check if the request is for a file (has an extension) or if the file exists
+		path := r.URL.Path
+
+		// Try to open the file
+		file, err := subFS.Open(path[1:]) // Remove leading slash
+		if err == nil {
+			file.Close()
+			// File exists, serve it normally
+			http.FileServer(http.FS(subFS)).ServeHTTP(w, r)
+		} else {
+			// File doesn't exist, serve index.html for client-side routing
+			// This enables SPA functionality
+			indexFile, err := subFS.Open("index.html")
+			if err != nil {
+				http.Error(w, "index.html not found", http.StatusNotFound)
+				return
+			}
+			defer indexFile.Close()
+
+			// Serve index.html content
+			stat, _ := indexFile.Stat()
+			http.ServeContent(w, r, "index.html", stat.ModTime(), indexFile.(io.ReadSeeker))
+		}
 	}
 }
 
